@@ -7,11 +7,11 @@ O Phato é um aplicativo que busca transformar a maneira como consumimos notíci
 
 ## ✨ Principais Funcionalidades
 
-* **Agregação de Notícias:** Integração com múltiplas APIs de notícias, como NewsAPI, The Guardian API e The New York Times API, para uma cobertura ampla.
-* **Análise com I.A.:** Utiliza o modelo `gemini-1.5-flash` do Google para analisar o conteúdo dos artigos.
-* **Extração de Fatos:** Identifica os elementos factuais de uma notícia (Quem, O quê, Quando, Onde, Porquê).
-* **Análise de Narrativas:** Mapeia as diferentes perspectivas e ênfases (ex: centro-esquerda, direita) na cobertura de um evento.
-* **Navegação por Categorias:** Permite filtrar e explorar o conteúdo por categorias temáticas.
+* **Agregação de Notícias:** 
+* **Análise com I.A.:** 
+* **Extração de Fatos:** 
+* **Análise de Narrativas:** 
+* **Navegação por Categorias:** 
 
 ## 🛠️ Tech Stack
 
