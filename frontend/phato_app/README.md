@@ -54,3 +54,17 @@ O aplicativo é a interface principal para os utilizadores interagirem com o eco
 ## 📂 Estrutura de Pastas (Arquitetura)
 
 O projeto segue uma arquitetura limpa para separar as responsabilidades. A estrutura principal dentro da pasta `lib/` é:
+
+lib/
+├── api/              # Lógica de comunicação com a API (ex: ApiService)
+├── models/           # Modelos de dados (ex: Article, User)
+├── views/ ou pages/  # As telas/páginas da aplicação (a UI)
+├── widgets/          # Widgets reutilizáveis (botões, cards, etc.)
+├── utils/            # Funções utilitárias, constantes, etc.
+└── main.dart         # Ponto de entrada da aplicação
+
+
+## ✅ Padrões de Código
+
+* **Formatação:** Antes de fazer um `commit`, execute sempre `flutter format .` para garantir a consistência do código.
+* **Linter:** O ficheiro `analysis_options.yaml` contém as nossas regras de código. A sua IDE (VS Code/Android Studio) irá sublinhar automaticamente quaisquer violações a estas regras.
