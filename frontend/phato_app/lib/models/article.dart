@@ -1,6 +1,7 @@
 /// Este arquivo contém os modelos de dados para o projeto Phato.
 /// A estrutura reflete o esquema definido no back-end (models/Article.js).
 
+// ignore: unused_import
 import 'package:flutter/foundation.dart';
 
 /// Representa a estrutura principal de um artigo de notícia.
@@ -54,12 +55,18 @@ class Article {
       content: json['content'],
       description: json['description'],
       imageUrl: json['imageUrl'],
-      analysis: json['analysis'] != null ? Analysis.fromJson(json['analysis']) : null,
+      analysis: json['analysis'] != null
+          ? Analysis.fromJson(json['analysis'])
+          : null,
       fetchedAt: DateTime.parse(json['fetchedAt']),
       tags: List<String>.from(json['tags']),
       language: json['language'],
-      createdAt: DateTime.parse(json['createdAt']), // Mongoose adiciona 'createdAt'
-      updatedAt: DateTime.parse(json['updatedAt']), // Mongoose adiciona 'updatedAt'
+      createdAt: DateTime.parse(
+        json['createdAt'],
+      ), // Mongoose adiciona 'createdAt'
+      updatedAt: DateTime.parse(
+        json['updatedAt'],
+      ), // Mongoose adiciona 'updatedAt'
     );
   }
 }
@@ -73,11 +80,7 @@ class Source {
   Source({this.id, required this.name, this.url});
 
   factory Source.fromJson(Map<String, dynamic> json) {
-    return Source(
-      id: json['id'],
-      name: json['name'],
-      url: json['url'],
-    );
+    return Source(id: json['id'], name: json['name'], url: json['url']);
   }
 }
 
@@ -97,7 +100,9 @@ class Analysis {
 
   factory Analysis.fromJson(Map<String, dynamic> json) {
     var narrativeList = json['narratives'] as List;
-    List<Narrative> narratives = narrativeList.map((i) => Narrative.fromJson(i)).toList();
+    List<Narrative> narratives = narrativeList
+        .map((i) => Narrative.fromJson(i))
+        .toList();
 
     return Analysis(
       facts: Facts.fromJson(json['facts']),
