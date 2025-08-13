@@ -12,7 +12,6 @@ class AppTheme {
   static const Color phatoTextGray = Color(0xFFE0E0E0);
   static const Color unselectedPillColor = phatoCardGray;
 
-
   // --- ESTILOS DE TEXTO COM GOOGLE FONTS ---
 
   /// Estilo para títulos e cabeçalhos principais (ex: Logo, Títulos de página).
@@ -27,27 +26,26 @@ class AppTheme {
     color: phatoTextGray,
     fontSize: 16,
   );
-  
+
   /// Estilo específico para o logo, para fácil acesso.
   static final TextStyle logoStyle = GoogleFonts.leagueSpartan(
     color: phatoYellow,
     fontWeight: FontWeight.bold,
     fontSize: 22,
-  );
-  
+  ).copyWith(inherit: false);
+
   /// Estilo específico para a saudação.
   static final TextStyle greetingStyle = GoogleFonts.leagueSpartan(
     color: phatoYellow,
     fontSize: 28,
     fontWeight: FontWeight.bold,
   );
-  
+
   /// Estilo específico para textos secundários, como a localização.
   static final TextStyle secondaryTextStyle = GoogleFonts.quicksand(
     color: phatoTextGray.withOpacity(0.8),
     fontSize: 16,
-  );
-
+  ).copyWith(inherit: false);
 
   // --- TEMA GERAL DA APLICAÇÃO (CUPERTINO) ---
   static final CupertinoThemeData mainTheme = CupertinoThemeData(
