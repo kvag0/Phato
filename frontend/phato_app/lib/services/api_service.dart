@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io'; // Necessário para a exceção de SocketException
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -6,30 +8,52 @@ import '../models/article.dart';
 
 /// ApiService é responsável por toda a comunicação com a API do backend Phato.
 class ApiService {
-  // A URL base da API é carregada de forma segura a partir das variáveis de ambiente.
-  final String _baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://api.padrao.falhou.com';
+  final String _baseUrl =
+      dotenv.env['API_BASE_URL'] ?? 'http://api.padrao.falhou.com';
 
-  /// Busca uma lista de artigos da API.
+  /// Busca a lista de artigos reais da API do backend.
+  ///
+  /// Retorna uma Future<List<Article>> em caso de sucesso.
+  /// Lança uma Exception com uma mensagem amigável em caso de erro.
   Future<List<Article>> fetchArticles() async {
-    try {
-    // O _baseUrl agora vai usar a URL real do servidor do Rafael!
-    final url = Uri.parse('$_baseUrl/api/articles'); // Adicionamos o caminho do endpoint
-    final response = await http.get(url);
+    // Construímos a URL final para o endpoint que queremos aceder.
+    final url = Uri.parse('$_baseUrl/api/articles');
 
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonResponse = json.decode(response.body);
-      return jsonResponse.map((json) => Article.fromJson(json)).toList();
-    } else {
-      // Lidar com erros da API (ex: 404, 500)
-      throw Exception('Falha ao carregar os artigos. Código: ${response.statusCode}');
-    }
+    try {
+      // Realizamos a chamada GET. Usamos .timeout() para evitar que a app
+      // fique "presa" indefinidamente se a rede estiver muito lenta.
+      final response = await http.get(url).timeout(const Duration(seconds: 10));
+
+      // Verificamos o código de status da resposta. 200 significa "OK".
+      if (response.statusCode == 200) {
+        // Decodificamos o corpo da resposta, que é uma String JSON, para um Mapa Dart.
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+
+        // Acedemos à lista de artigos dentro da chave "data".
+        final List<dynamic> articlesJson = jsonResponse['data'];
+
+        // Mapeamos cada item da lista JSON para um objeto Article usando o nosso
+        // construtor .fromJson e retornamos a lista final.
+        return articlesJson.map((json) => Article.fromJson(json)).toList();
+      } else {
+        // Se o servidor respondeu, mas com um erro (404, 500, etc.),
+        // lançamos uma exceção clara.
+        throw Exception(
+          'Falha ao carregar os artigos. Status: ${response.statusCode}',
+        );
+      }
+    } on SocketException {
+      // Este erro é específico para quando não há conexão com a internet
+      // ou o servidor não é encontrado (DNS).
+      throw Exception('Falha na conexão. Por favor, verifique a sua internet.');
+    } on TimeoutException {
+      // Este erro acontece se o servidor demorar mais de 10 segundos a responder.
+      throw Exception(
+        'O servidor demorou muito para responder. Tente novamente mais tarde.',
+      );
     } catch (e) {
-      // Lidar com erros de conexão (sem internet, DNS, etc.)
-      throw Exception('Erro de conexão: $e');
+      // Uma captura genérica para qualquer outro erro inesperado.
+      throw Exception('Ocorreu um erro inesperado: $e');
     }
   }
 }
-
-  // Futuramente, outros métodos podem ser adicionados aqui:
-  // Future<Article> fetchArticleById(String id) async { ... }
-  // Future<bool> postComment(String articleId, String comment) async { ... }

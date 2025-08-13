@@ -64,7 +64,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// DENTRO DE phato/backend/src/index.js
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT} and listening on all interfaces`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });

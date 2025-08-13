@@ -1,10 +1,35 @@
-/// Este arquivo contém os modelos de dados para o projeto Phato.
-/// A estrutura reflete o esquema definido no back-end (models/Article.js).
-
-// ignore: unused_import
 import 'package:flutter/foundation.dart';
 
-/// Representa a estrutura principal de um artigo de notícia.
+// Função auxiliar para fazer o parse de datas de forma segura.
+DateTime _safeParseDateTime(dynamic input, {String debugLabel = ''}) {
+  if (input == null) {
+    if (kDebugMode) {
+      print(
+        '[DEBUG] safeParseDateTime: Input para "$debugLabel" é nulo. A usar data atual.',
+      );
+    }
+    return DateTime.now();
+  }
+  if (input is String) {
+    try {
+      return DateTime.parse(input);
+    } catch (e) {
+      if (kDebugMode) {
+        print(
+          '[DEBUG] safeParseDateTime: Falha ao fazer parse da string de data "$input" para "$debugLabel". A usar data atual. Erro: $e',
+        );
+      }
+      return DateTime.now();
+    }
+  }
+  if (kDebugMode) {
+    print(
+      '[DEBUG] safeParseDateTime: Tipo de input inesperado para "$debugLabel": ${input.runtimeType}. A usar data atual.',
+    );
+  }
+  return DateTime.now();
+}
+
 class Article {
   final String id;
   final String title;
@@ -42,36 +67,38 @@ class Article {
     required this.updatedAt,
   });
 
-  /// Factory constructor para criar uma instância de Article a partir de um JSON.
   factory Article.fromJson(Map<String, dynamic> json) {
     return Article(
-      id: json['_id'], // MongoDB usa _id
-      title: json['title'],
-      url: json['url'],
-      source: Source.fromJson(json['source']),
-      author: json['author'],
-      publishedAt: DateTime.parse(json['publishedAt']),
-      category: json['category'],
-      content: json['content'],
-      description: json['description'],
-      imageUrl: json['imageUrl'],
-      analysis: json['analysis'] != null
+      id: json['_id'] as String? ?? 'id_indisponivel',
+      title: json['title'] as String? ?? 'Título indisponível',
+      url: json['url'] as String? ?? '',
+      source: json['source'] != null
+          ? Source.fromJson(json['source'])
+          : Source(
+              name: 'Fonte Desconhecida',
+            ), // Valor padrão para o objeto Source
+      author: json['author'] as String?,
+      publishedAt: _safeParseDateTime(
+        json['publishedAt'],
+        debugLabel: 'publishedAt',
+      ),
+      category: json['category'] as String? ?? 'Geral',
+      content: json['content'] as String?,
+      description: json['description'] as String?,
+      imageUrl: json['imageUrl'] as String?,
+      analysis:
+          json['analysis'] != null && json['analysis'] is Map<String, dynamic>
           ? Analysis.fromJson(json['analysis'])
           : null,
-      fetchedAt: DateTime.parse(json['fetchedAt']),
-      tags: List<String>.from(json['tags']),
-      language: json['language'],
-      createdAt: DateTime.parse(
-        json['createdAt'],
-      ), // Mongoose adiciona 'createdAt'
-      updatedAt: DateTime.parse(
-        json['updatedAt'],
-      ), // Mongoose adiciona 'updatedAt'
+      fetchedAt: _safeParseDateTime(json['fetchedAt'], debugLabel: 'fetchedAt'),
+      tags: json['tags'] != null ? List<String>.from(json['tags']) : [],
+      language: json['language'] as String?,
+      createdAt: _safeParseDateTime(json['createdAt'], debugLabel: 'createdAt'),
+      updatedAt: _safeParseDateTime(json['updatedAt'], debugLabel: 'updatedAt'),
     );
   }
 }
 
-/// Representa a fonte da notícia.
 class Source {
   final String? id;
   final String name;
@@ -80,92 +107,100 @@ class Source {
   Source({this.id, required this.name, this.url});
 
   factory Source.fromJson(Map<String, dynamic> json) {
-    return Source(id: json['id'], name: json['name'], url: json['url']);
+    return Source(
+      id: json['id'] as String?,
+      name: json['name'] as String? ?? 'Fonte Desconhecida',
+      url: json['url'] as String?,
+    );
   }
 }
+// --- O resto das classes (Analysis, Facts, Narrative) pode ser colado aqui ---
+// Se o erro persistir, precisaremos de aplicar a mesma lógica defensiva a elas.
+// Por agora, vamos focar-nos no Article e Source, que são as causas mais prováveis.
 
-/// Contém os resultados da análise de IA.
 class Analysis {
-  final Facts facts;
+  final Facts? facts;
   final List<Narrative> narratives;
-  final DateTime analyzedAt;
-  final String geminiVersion;
+  final DateTime? analyzedAt;
+  final String? geminiVersion;
 
   Analysis({
-    required this.facts,
+    this.facts,
     required this.narratives,
-    required this.analyzedAt,
-    required this.geminiVersion,
+    this.analyzedAt,
+    this.geminiVersion,
   });
 
   factory Analysis.fromJson(Map<String, dynamic> json) {
-    var narrativeList = json['narratives'] as List;
-    List<Narrative> narratives = narrativeList
-        .map((i) => Narrative.fromJson(i))
-        .toList();
-
     return Analysis(
-      facts: Facts.fromJson(json['facts']),
-      narratives: narratives,
-      analyzedAt: DateTime.parse(json['analyzedAt']),
-      geminiVersion: json['geminiVersion'],
+      facts: json['facts'] != null ? Facts.fromJson(json['facts']) : null,
+      narratives: json['narratives'] != null
+          ? List<Narrative>.from(
+              json['narratives'].map((x) => Narrative.fromJson(x)),
+            )
+          : [],
+      analyzedAt: _safeParseDateTime(
+        json['analyzedAt'],
+        debugLabel: 'analyzedAt',
+      ),
+      geminiVersion: json['geminiVersion'] as String?,
     );
   }
 }
 
-/// Contém os fatos extraídos da notícia.
 class Facts {
   final List<String> who;
-  final String what;
-  final String when;
+  final String? what;
+  final String? when;
   final List<String> where;
-  final String why;
-  final String summary;
+  final String? why;
+  final String? summary;
 
   Facts({
     required this.who,
-    required this.what,
-    required this.when,
+    this.what,
+    this.when,
     required this.where,
-    required this.why,
-    required this.summary,
+    this.why,
+    this.summary,
   });
 
   factory Facts.fromJson(Map<String, dynamic> json) {
     return Facts(
-      who: List<String>.from(json['who']),
-      what: json['what'],
-      when: json['when'],
-      where: List<String>.from(json['where']),
-      why: json['why'],
-      summary: json['summary'],
+      who: json['who'] != null ? List<String>.from(json['who']) : [],
+      what: json['what'] as String?,
+      when: json['when'] as String?,
+      where: json['where'] != null ? List<String>.from(json['where']) : [],
+      why: json['why'] as String?,
+      summary: json['summary'] as String?,
     );
   }
 }
 
-/// Representa uma narrativa ou perspectiva identificada na notícia.
 class Narrative {
-  final String perspective;
-  final String title;
-  final String summary;
+  final String? perspective;
+  final String? title;
+  final String? summary;
   final List<String> emphasis;
-  final String interpretation;
+  final String? interpretation;
 
   Narrative({
-    required this.perspective,
-    required this.title,
-    required this.summary,
+    this.perspective,
+    this.title,
+    this.summary,
     required this.emphasis,
-    required this.interpretation,
+    this.interpretation,
   });
 
   factory Narrative.fromJson(Map<String, dynamic> json) {
     return Narrative(
-      perspective: json['perspective'],
-      title: json['title'],
-      summary: json['summary'],
-      emphasis: List<String>.from(json['emphasis']),
-      interpretation: json['interpretation'],
+      perspective: json['perspective'] as String?,
+      title: json['title'] as String?,
+      summary: json['summary'] as String?,
+      emphasis: json['emphasis'] != null
+          ? List<String>.from(json['emphasis'])
+          : [],
+      interpretation: json['interpretation'] as String?,
     );
   }
 }

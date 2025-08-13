@@ -6,7 +6,7 @@ dotenv.config();
 class GeminiAnalyzer {
   constructor() {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
   }
 
   async analyzeArticle(article) {
@@ -74,7 +74,7 @@ class GeminiAnalyzer {
         facts: facts || this.getDefaultFacts(),
         narratives: Array.isArray(narratives) ? narratives : [],
         analyzedAt: new Date(),
-        geminiVersion: 'gemini-1.5-flash'
+        geminiVersion: 'gemini-2.0-flash'
       };
     } catch (error) {
       console.error('Gemini analysis error:', error);

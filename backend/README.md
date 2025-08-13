@@ -169,7 +169,3 @@ Be aware of rate limits for external APIs:
 - Guardian: 5,000 requests/day
 - NYT: 500 requests/day
 - Gemini: Check Google AI Studio for limits
-
-## License
-
-MIT
