@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:phato_app/core/theme/app_theme.dart';
 import 'feed_tab_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,46 +11,67 @@ class HomePage extends StatelessWidget {
       tabBuilder: (BuildContext context, int index) {
         switch (index) {
           case 0: // Aba "Feed"
-            return CupertinoTabView(builder: (context) {
-              // CORREÇÃO: FeedTabPage NÃO é const.
-              return FeedTabPage();
-            });
+            return CupertinoTabView(
+              builder: (context) {
+                // CORREÇÃO: FeedTabPage NÃO é const.
+                return FeedTabPage();
+              },
+            );
           case 1: // Aba "PhatoBot"
-            return CupertinoTabView(builder: (context) {
-              return const CupertinoPageScaffold(
-                child: Center(child: Text('Tela do PhatoBot')),
-              );
-            });
+            return CupertinoTabView(
+              builder: (context) {
+                return const CupertinoPageScaffold(
+                  child: Center(child: Text('Tela do PhatoBot')),
+                );
+              },
+            );
           case 2: // Aba "Finanças"
-            return CupertinoTabView(builder: (context) {
-              return const CupertinoPageScaffold(
-                child: Center(child: Text('Tela de Finanças')),
-              );
-            });
+            return CupertinoTabView(
+              builder: (context) {
+                return const CupertinoPageScaffold(
+                  child: Center(child: Text('Tela de Finanças')),
+                );
+              },
+            );
           default:
-             return CupertinoTabView(builder: (context) {
-              // CORREÇÃO: FeedTabPage NÃO é const.
-              return FeedTabPage();
-            });
+            return CupertinoTabView(
+              builder: (context) {
+                // CORREÇÃO: FeedTabPage NÃO é const.
+                return FeedTabPage();
+              },
+            );
         }
       },
       tabBar: CupertinoTabBar(
-        activeColor: const Color(0xFFffbc59), // Temporário, usaremos o tema depois
-        inactiveColor: CupertinoColors.systemGrey,
-        backgroundColor: const Color(0xFF0d0d0d).withOpacity(0.95),
+        // Usamos as cores do nosso tema para consistência.
+        activeColor: AppTheme.phatoYellow,
+        inactiveColor: AppTheme.phatoTextGray,
+        backgroundColor: AppTheme.phatoBlack.withOpacity(0.95),
         border: null,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.home),
-            label: 'Feed',
+            // A CORREÇÃO ESTÁ AQUI: Envolvemos o Ícone com Padding.
+            icon: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: const Icon(CupertinoIcons.home),
+            ),
+            // label: 'Feed',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.square_grid_2x2),
-            label: 'PhatoBot',
+            // A CORREÇÃO ESTÁ AQUI: Envolvemos o Ícone com Padding.
+            icon: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: const Icon(CupertinoIcons.square_grid_2x2),
+            ),
+            // label: 'PhatoBot',
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.chart_bar_alt_fill),
-            label: 'Finanças',
+            // A CORREÇÃO ESTÁ AQUI: Envolvemos o Ícone com Padding.
+            icon: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: const Icon(CupertinoIcons.chart_bar_alt_fill),
+            ),
+            // label: 'Finanças',
           ),
         ],
       ),

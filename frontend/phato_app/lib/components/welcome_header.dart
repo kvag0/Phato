@@ -21,15 +21,12 @@ class WelcomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '${_getGreeting()}, Caio!',
-            style: AppTheme.greetingStyle,
-          ),
-          const SizedBox(height: 8),
+          Text('${_getGreeting()}, Caio!', style: AppTheme.greetingStyle),
+          const SizedBox(height: 0),
           CupertinoButton(
             padding: EdgeInsets.zero,
             onPressed: () {},

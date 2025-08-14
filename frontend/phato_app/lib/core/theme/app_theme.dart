@@ -28,16 +28,16 @@ class AppTheme {
   );
 
   /// Estilo específico para o logo, para fácil acesso.
-  static final TextStyle logoStyle = GoogleFonts.leagueSpartan(
+  static final TextStyle logoStyle = GoogleFonts.anton(
     color: phatoYellow,
     fontWeight: FontWeight.bold,
-    fontSize: 22,
+    fontSize: 32,
   ).copyWith(inherit: false);
 
   /// Estilo específico para a saudação.
   static final TextStyle greetingStyle = GoogleFonts.leagueSpartan(
     color: phatoYellow,
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: FontWeight.bold,
   );
 

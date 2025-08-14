@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import '../components/custom_app_header.dart';
-import '../components/feed_filter_pills.dart';
-import '../components/welcome_header.dart';
+import '../components/custom_sliver_header.dart';
 import '../models/article.dart';
 import '../services/api_service.dart';
-import '../widgets/category_highlights_bar.dart';
-import '../widgets/article_card.dart';
+import '../widgets/article_page_item.dart';
 
-// 1. Convertemos para StatefulWidget para gerir o ciclo de vida da chamada à API.
 class FeedTabPage extends StatefulWidget {
   const FeedTabPage({super.key});
 
@@ -27,38 +23,56 @@ class _FeedTabPageState extends State<FeedTabPage> {
 
   @override
   Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).padding.top;
+
     return CupertinoPageScaffold(
-      navigationBar: const CustomAppHeader(),
-      child: SafeArea(
-        child: FutureBuilder<List<Article>>(
-          future: _articlesFuture,
-          builder: (context, snapshot) {
-            // Os estados de 'loading' e 'error' continuam iguais.
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CupertinoActivityIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Erro: ${snapshot.error}'));
-            } else if (snapshot.hasData) {
-              final articles = snapshot.data!;
-              if (articles.isEmpty) {
-                return const Center(child: Text('Nenhum artigo encontrado.'));
-              }
-              return ListView(
-                children: [
-                  // Os nossos widgets de "cabeçalho de conteúdo" são agora
-                  // os primeiros itens da nossa lista rolável.
-                  WelcomeHeader(),
-                  const CategoryHighlightsBar(),
-                  const FeedFilterPills(),
-                  ...articles
-                      .map((article) => ArticleCard(article: article))
-                      .toList(),
-                ],
-              );
-            }
-            return const Center(child: Text('Algo correu mal.'));
-          },
-        ),
+      child: CustomScrollView(
+        slivers: [
+          // O nosso cabeçalho animado personalizado.
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: CustomSliverHeaderDelegate(
+              minHeight: 60 + topPadding,
+              maxHeight: 320 + topPadding,
+            ),
+          ),
+
+          // O SliverFillRemaining garante que o nosso PageView ocupe
+          // todo o espaço restante e visível no ecrã.
+          SliverFillRemaining(
+            // hasScrollBody: true é importante para dizer ao CustomScrollView
+            // que o filho dele é o principal corpo rolável.
+            hasScrollBody: true,
+            child: FutureBuilder<List<Article>>(
+              future: _articlesFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CupertinoActivityIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Erro: ${snapshot.error}'));
+                } else if (snapshot.hasData) {
+                  final articles = snapshot.data!;
+                  if (articles.isEmpty) {
+                    return const Center(
+                      child: Text('Nenhum artigo encontrado.'),
+                    );
+                  }
+
+                  // PageView.builder é o widget que cria o efeito de "TikTok".
+                  return PageView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: articles.length,
+                    itemBuilder: (context, index) {
+                      final article = articles[index];
+                      return ArticlePageItem(article: article);
+                    },
+                  );
+                }
+                return const Center(child: Text('Algo correu mal.'));
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
