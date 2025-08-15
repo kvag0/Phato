@@ -11,7 +11,6 @@ class ArticleDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      // A ALTERAÇÃO ESTÁ AQUI:
       navigationBar: CupertinoNavigationBar(
         middle: Text(
           article.source.name,
@@ -19,14 +18,8 @@ class ArticleDetailPage extends StatelessWidget {
         ),
         // Adicionamos um botão de "voltar" personalizado.
         leading: CupertinoNavigationBarBackButton(
-          // E damos-lhe uma ação personalizada.
           onPressed: () {
-            // Este comando diz ao Navigator para fechar páginas até encontrar
-            // a primeira rota na pilha de navegação do separador atual.
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).popUntil((route) => route.isFirst);
+            Navigator.of(context).popUntil((route) => route.isFirst);
           },
         ),
         trailing: Row(
