@@ -3,6 +3,8 @@ import '../components/custom_sliver_header.dart';
 import '../models/article.dart';
 import '../services/api_service.dart';
 import '../widgets/article_page_item.dart';
+import '../widgets/category_highlights_bar.dart';
+import '../widgets/article_story_item.dart'; // Mude a importação de article_page_item para esta
 
 class FeedTabPage extends StatefulWidget {
   const FeedTabPage({super.key});
@@ -13,12 +15,34 @@ class FeedTabPage extends StatefulWidget {
 
 class _FeedTabPageState extends State<FeedTabPage> {
   final ApiService _apiService = ApiService();
-  late final Future<List<Article>> _articlesFuture;
+
+  // 1. A Future agora pode ser nula e não é mais 'final'.
+  Future<List<Article>>? _articlesFuture;
+
+  // 2. Adicionamos a variável de estado para a categoria selecionada.
+  String _selectedCategory = 'world'; // Categoria inicial
 
   @override
   void initState() {
     super.initState();
-    _articlesFuture = _apiService.fetchArticles();
+    // 3. Carregamos os artigos para a categoria inicial.
+    _loadArticles();
+  }
+
+  // 4. Criamos um método para (re)carregar os artigos.
+  void _loadArticles() {
+    setState(() {
+      _articlesFuture = _apiService.fetchArticles(category: _selectedCategory);
+    });
+  }
+
+  // 5. Esta é a nossa função de callback.
+  void _onCategorySelected(String categoryId) {
+    // Atualizamos o estado com a nova categoria e recarregamos os artigos.
+    setState(() {
+      _selectedCategory = categoryId;
+      _articlesFuture = _apiService.fetchArticles(category: _selectedCategory);
+    });
   }
 
   @override
@@ -28,20 +52,18 @@ class _FeedTabPageState extends State<FeedTabPage> {
     return CupertinoPageScaffold(
       child: CustomScrollView(
         slivers: [
-          // O nosso cabeçalho animado personalizado.
           SliverPersistentHeader(
             pinned: true,
             delegate: CustomSliverHeaderDelegate(
               minHeight: 60 + topPadding,
               maxHeight: 320 + topPadding,
+              // 3. Passamos o estado e o callback para o nosso cabeçalho.
+              selectedCategory: _selectedCategory,
+              onCategorySelected: _onCategorySelected,
             ),
           ),
 
-          // O SliverFillRemaining garante que o nosso PageView ocupe
-          // todo o espaço restante e visível no ecrã.
           SliverFillRemaining(
-            // hasScrollBody: true é importante para dizer ao CustomScrollView
-            // que o filho dele é o principal corpo rolável.
             hasScrollBody: true,
             child: FutureBuilder<List<Article>>(
               future: _articlesFuture,
@@ -64,7 +86,8 @@ class _FeedTabPageState extends State<FeedTabPage> {
                     itemCount: articles.length,
                     itemBuilder: (context, index) {
                       final article = articles[index];
-                      return ArticlePageItem(article: article);
+                      // Mude o nome do widget para o novo que criámos
+                      return ArticleStoryItem(article: article);
                     },
                   );
                 }

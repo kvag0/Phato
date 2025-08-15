@@ -10,10 +10,15 @@ import 'welcome_header.dart';
 class CustomSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final double maxHeight;
+  // 1. Adicionamos os parâmetros necessários.
+  final String selectedCategory;
+  final Function(String) onCategorySelected;
 
   const CustomSliverHeaderDelegate({
     required this.minHeight,
     required this.maxHeight,
+    required this.selectedCategory,
+    required this.onCategorySelected,
   });
 
   @override
@@ -54,6 +59,7 @@ class CustomSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     WelcomeHeader(),
+                    // A CORREÇÃO É AQUI: Chamamos o construtor sem os parâmetros.
                     const CategoryHighlightsBar(),
                     const FeedFilterToggle(),
                   ],
