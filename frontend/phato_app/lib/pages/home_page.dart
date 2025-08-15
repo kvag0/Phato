@@ -55,7 +55,6 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0),
               child: const Icon(CupertinoIcons.home),
             ),
-            // label: 'Feed',
           ),
           BottomNavigationBarItem(
             // A CORREÇÃO ESTÁ AQUI: Envolvemos o Ícone com Padding.
@@ -63,7 +62,6 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0),
               child: const Icon(CupertinoIcons.square_grid_2x2),
             ),
-            // label: 'PhatoBot',
           ),
           BottomNavigationBarItem(
             // A CORREÇÃO ESTÁ AQUI: Envolvemos o Ícone com Padding.
@@ -71,7 +69,6 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8.0),
               child: const Icon(CupertinoIcons.chart_bar_alt_fill),
             ),
-            // label: 'Finanças',
           ),
         ],
       ),
