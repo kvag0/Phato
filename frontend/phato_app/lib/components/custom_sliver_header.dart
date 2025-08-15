@@ -4,21 +4,14 @@ import '../widgets/category_highlights_bar.dart';
 import 'feed_filter_toggle.dart';
 import 'welcome_header.dart';
 
-/// O "cérebro" do nosso cabeçalho personalizado e animado.
-/// Usa SliverPersistentHeaderDelegate para controlar como o cabeçalho se comporta
-/// durante o scroll, animando entre um estado expandido e um encolhido.
 class CustomSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final double maxHeight;
-  // 1. Adicionamos os parâmetros necessários.
-  final String selectedCategory;
-  final Function(String) onCategorySelected;
 
+  // Parâmetros de categoria foram removidos.
   const CustomSliverHeaderDelegate({
     required this.minHeight,
     required this.maxHeight,
-    required this.selectedCategory,
-    required this.onCategorySelected,
   });
 
   @override
@@ -59,7 +52,6 @@ class CustomSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     WelcomeHeader(),
-                    // A CORREÇÃO É AQUI: Chamamos o construtor sem os parâmetros.
                     const CategoryHighlightsBar(),
                     const FeedFilterToggle(),
                   ],
