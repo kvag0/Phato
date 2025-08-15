@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:phato_app/core/theme/app_theme.dart';
+import 'package:phato_app/pages/chatbot_page.dart';
 import 'feed_tab_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -13,16 +14,13 @@ class HomePage extends StatelessWidget {
           case 0: // Aba "Feed"
             return CupertinoTabView(
               builder: (context) {
-                // CORREÇÃO: FeedTabPage NÃO é const.
                 return FeedTabPage();
               },
             );
           case 1: // Aba "PhatoBot"
             return CupertinoTabView(
               builder: (context) {
-                return const CupertinoPageScaffold(
-                  child: Center(child: Text('Tela do PhatoBot')),
-                );
+                return ChatbotPage();
               },
             );
           case 2: // Aba "Finanças"
@@ -36,7 +34,6 @@ class HomePage extends StatelessWidget {
           default:
             return CupertinoTabView(
               builder: (context) {
-                // CORREÇÃO: FeedTabPage NÃO é const.
                 return FeedTabPage();
               },
             );

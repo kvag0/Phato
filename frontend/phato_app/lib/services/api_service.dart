@@ -65,4 +65,38 @@ class ApiService {
       throw Exception('Ocorreu um erro inesperado ao buscar categorias: $e');
     }
   }
+
+  Future<String> getChatbotResponse({
+    required String question,
+    required String articleId,
+  }) async {
+    final url = Uri.parse('$_baseUrl/api/chatbot/ask');
+    try {
+      final response = await http
+          .post(
+            url,
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({'question': question, 'articleId': articleId}),
+          )
+          .timeout(
+            const Duration(seconds: 30),
+          ); // Aumentamos o timeout para a IA
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse['data']['answer'] ??
+            'Não foi possível obter uma resposta.';
+      } else {
+        throw Exception(
+          'Falha ao comunicar com o PhatoBot. Status: ${response.statusCode}',
+        );
+      }
+    } on SocketException {
+      throw Exception('Falha na conexão. Por favor, verifique a sua internet.');
+    } on TimeoutException {
+      throw Exception('O PhatoBot demorou muito para responder.');
+    } catch (e) {
+      throw Exception('Ocorreu um erro inesperado: $e');
+    }
+  }
 }

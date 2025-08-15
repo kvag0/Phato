@@ -28,7 +28,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage> {
       CupertinoPageRoute(
         builder: (context) => ChatbotPage(
           initialQuestion: message,
-          articleContextId: widget.article.id,
+          articleContext: widget.article,
         ),
       ),
     );

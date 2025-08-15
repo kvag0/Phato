@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/database.js';
 import articleRoutes from './routes/articleRoutes.js';
+import chatbotRoutes from './routes/chatbotRoutes.js';
+
+
 
 dotenv.config();
 
@@ -55,6 +58,8 @@ app.get('/health', (req, res) => {
 });
 
 app.use('/api/articles', articleRoutes);
+
+app.use('/api/chatbot', chatbotRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
