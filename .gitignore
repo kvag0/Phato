@@ -158,3 +158,41 @@ vite.config.ts.timestamp-*
 # Arquivos de ambiente
 .env*
 !.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Model files
+models/
+*.onnx
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
