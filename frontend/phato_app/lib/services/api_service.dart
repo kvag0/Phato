@@ -66,6 +66,69 @@ class ApiService {
     }
   }
 
+  /// Realiza uma busca híbrida (vetorial + texto) por artigos.
+  Future<List<Article>> hybridSearch(String query) async {
+    // Se a busca estiver vazia, retorna uma lista vazia para evitar chamadas desnecessárias.
+    if (query.trim().isEmpty) {
+      return [];
+    }
+
+    final url = Uri.parse(
+      '$_baseUrl/api/search/hybrid',
+    ).replace(queryParameters: {'q': query});
+
+    try {
+      final response = await http.get(url).timeout(const Duration(seconds: 20));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        final List<dynamic> articlesJson = jsonResponse['data'];
+        return articlesJson.map((json) => Article.fromJson(json)).toList();
+      } else {
+        throw Exception('Falha na busca. Status: ${response.statusCode}');
+      }
+    } on SocketException {
+      throw Exception('Falha na conexão. Por favor, verifique a sua internet.');
+    } on TimeoutException {
+      throw Exception('A busca demorou muito para responder.');
+    } catch (e) {
+      throw Exception('Ocorreu um erro inesperado na busca: $e');
+    }
+  }
+
+  /// Sends a question to the global RAG chatbot and gets a response.
+  Future<String> getRAGResponse({required String question}) async {
+    final url = Uri.parse('$_baseUrl/api/chat');
+    try {
+      final response = await http
+          .post(
+            url,
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode({'question': question}),
+          )
+          .timeout(
+            const Duration(seconds: 60),
+          ); // Increased timeout for RAG models
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse['data']['answer'] ??
+            'Não foi possível obter uma resposta.';
+      } else {
+        final errorResponse = json.decode(response.body);
+        throw Exception(
+          'Falha ao comunicar com o PhatoBot: ${errorResponse['error'] ?? response.statusCode}',
+        );
+      }
+    } on SocketException {
+      throw Exception('Falha na conexão. Por favor, verifique a sua internet.');
+    } on TimeoutException {
+      throw Exception('O PhatoBot demorou muito para responder.');
+    } catch (e) {
+      throw Exception('Ocorreu um erro inesperado: $e');
+    }
+  }
+
   Future<String> getChatbotResponse({
     required String question,
     required String articleId,

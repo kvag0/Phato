@@ -1,10 +1,8 @@
 import express from 'express';
-import EnhancedArticle from '../models/EnhancedArticle.js';
-import StoryCluster from '../models/StoryCluster.js';
-import Fact from '../models/Fact.js';
-import hybridSearchService from '../services/vector/HybridSearchService.js';
-import temporalQueryService from '../services/temporal/TemporalQueryService.js';
-import localLLMClient from '../services/llm/LocalLLMClient.js';
+import { askQuestion, getConversations, getConversationById, deleteConversation } from '../controllers/chatbotController.js';
+import { protect } from '../middleware/auth.js';
+
+// A linha que importava 'ChatConversation.js' foi removida.
 
 const router = express.Router();
 

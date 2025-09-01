@@ -1,9 +1,6 @@
 import express from 'express';
-import hybridSearchService from '../services/vector/HybridSearchService.js';
-import EnhancedArticle from '../models/EnhancedArticle.js';
-import StoryCluster from '../models/StoryCluster.js';
-import Fact from '../models/Fact.js';
-import temporalQueryService from '../services/temporal/TemporalQueryService.js';
+import { hybridSearch, getSimilarArticles } from '../controllers/chatbotController.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
