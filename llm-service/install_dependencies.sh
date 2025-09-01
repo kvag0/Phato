@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "=================================================="
+echo "   Installing System Dependencies for LLM Service"
+echo "=================================================="
+echo ""
+echo "This script needs to install system packages."
+echo "Please run the following command manually:"
+echo ""
+echo "  sudo apt-get update && sudo apt-get install -y cmake build-essential python3-dev"
+echo ""
+echo "After installing, run ./start.sh again"
+echo ""
+echo "=================================================="
+echo ""
+echo "Alternatively, you can use pre-built wheels by running:"
+echo "./start_prebuilt.sh"
