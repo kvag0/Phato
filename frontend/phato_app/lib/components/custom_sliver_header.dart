@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:phato_app/pages/search_page.dart';
 import '../core/theme/app_theme.dart';
 import '../widgets/category_highlights_bar.dart';
 import 'feed_filter_toggle.dart';
@@ -97,7 +98,14 @@ class CustomSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                           children: [
                             CupertinoButton(
                               padding: const EdgeInsets.all(4.0),
-                              onPressed: () {},
+                              onPressed: () {
+                                // NAVEGAÇÃO PARA A PÁGINA DE BUSCA
+                                Navigator.of(context).push(
+                                  CupertinoPageRoute(
+                                    builder: (context) => const SearchPage(),
+                                  ),
+                                );
+                              },
                               child: const Icon(
                                 CupertinoIcons.search,
                                 color: AppTheme.phatoTextGray,

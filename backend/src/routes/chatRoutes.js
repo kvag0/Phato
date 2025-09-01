@@ -1,10 +1,15 @@
 import express from 'express';
-import ragChatbotService from '../services/chat/RAGChatbotService.js';
-import ChatConversation from '../models/ChatConversation.js';
-import { v4 as uuidv4 } from 'uuid';
+// A importação do modelo 'ChatConversation' foi removida.
+// Os controladores corretos já estão a ser importados.
+import { 
+    askQuestion, 
+    getConversations, 
+    getConversationById, 
+    deleteConversation 
+} from '../controllers/chatbotController.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
-
 /**
  * @route POST /api/chat/message
  * @desc Send a message to the RAG chatbot
